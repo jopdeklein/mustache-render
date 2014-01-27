@@ -43,6 +43,7 @@ module.exports = function gruntTask(grunt) {
     var renderFn = this._compileTemplate(template);
     data = this._getData(data);
 
+    grunt.log.debug("Rendering: " + template + " to " + dest);
     grunt.file.write(dest, renderFn(data, this._getPartial.bind(this)));
   };
 
@@ -64,6 +65,7 @@ module.exports = function gruntTask(grunt) {
 
   // Internal: Read JSON or YAML data from file.
   GMR.prototype._getDataFromFile = function getDataFromFile(dataPath) {
+    grunt.log.debug("Loading data file: " + dataPath);
     if (/\.json/i.test(dataPath)) {
       return grunt.file.readJSON(dataPath);
     } else if (/\.ya?ml/i.test(dataPath)) {
@@ -75,6 +77,7 @@ module.exports = function gruntTask(grunt) {
 
   // Internal: Compile template to render function.
   GMR.prototype._compileTemplate = function compileTemplate(file) {
+    grunt.log.debug("Compiling: " + file);
     return mustache.compile(grunt.file.read(file));
   };
 
@@ -84,9 +87,11 @@ module.exports = function gruntTask(grunt) {
     var filePath = path.join(this.options.directory, fileName);
 
     if (grunt.file.exists(filePath)) {
+      grunt.log.debug("Loading partial: " + filePath);
       return grunt.file.read(filePath);
     }
 
+    grunt.log.warn("Cannot find partial: " + filePath);
     return "";
   };
 
